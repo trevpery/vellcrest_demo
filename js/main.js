@@ -242,7 +242,13 @@ function updateHeaderTheme() {
     Math.min(55, window.innerHeight - 20),
   );
   const point = points.find((element) => !element.closest(".header"));
-  const onDark = menuOpen || Boolean(point && point.closest(".hero, .reveal, .statement, .industries, .contact-section, .footer"));
+  // The home banner begins with the approved blue identity because the logo
+  // and menu sit over the bright window area. Dark sections still switch the
+  // header to white, and the open navigation always remains white on blue.
+  const onHomeBanner = Boolean(point && point.closest(".home-image-hero"));
+  const onDark = menuOpen || Boolean(
+    point && !onHomeBanner && point.closest(".reveal, .statement, .industries, .contact-section, .footer"),
+  );
   header.classList.toggle("is-dark", onDark);
   setLogo(onDark ? whiteLogo : colourLogo);
 }
