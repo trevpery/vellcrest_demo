@@ -63,7 +63,11 @@ a, button { -webkit-tap-highlight-color: transparent; }
   letter-spacing: -.055em;
   font-weight: 300;
 }
-.home-image-hero .exp a { color: #fff; }
+.home-image-hero .exp a { color: #fff; border-bottom: 0; padding-bottom: 0; align-items: center; }
+.home-image-hero .exp a .link-label {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ffffff80;
+}
 .home-image-hero .image-scroll-cue {
   opacity: 1;
   transform: translate(-50%, 0);
@@ -143,14 +147,19 @@ a, button { -webkit-tap-highlight-color: transparent; }
   align-items: center;
   gap: 24px;
   margin-top: 28px;
-  padding-bottom: 7px;
-  border-bottom: 1px solid currentColor;
+  padding-bottom: 0;
+  border-bottom: 0;
   color: inherit;
   font-size: 10px;
   letter-spacing: .15em;
   text-transform: uppercase;
 }
-.card-link span { font-size: 14px; }
+.card-link .card-link-label {
+  padding-bottom: 7px;
+  border-bottom: 1px solid currentColor;
+  font-size: inherit;
+}
+.card-link .css-arrow { font-size: 0 !important; }
 .service-card-link { cursor: pointer; }
 .service-card-link:focus-visible { outline: 3px solid var(--soft-blue); outline-offset: 4px; }
 .expertise-group.compact .service-list-card {
@@ -270,6 +279,16 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .footer { background: #070b2b; }
 .footer > p { color: #adb5dc; }
 .footer small { color: #858fbd; }
+.footer > nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.footer .text-arrow {
+  width: 12px;
+  height: 12px;
+  vertical-align: middle;
+}
 
 .about-page,
 .people-section { background: #fff; color: var(--ink); }
@@ -358,8 +377,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
 /* Single-shape vector arrows: no font glyphs, emoji substitution or coloured
    mobile-browser boxes. The mask inherits the surrounding text colour. */
 .css-arrow,
-.css-arrow-down,
-.css-icon-arrow {
+.css-arrow-down {
   display: inline-block;
   flex: 0 0 auto;
   background-color: currentColor !important;
@@ -389,13 +407,21 @@ a, button { -webkit-tap-highlight-color: transparent; }
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 18'%3E%3Cpath d='M7 1.5V16M2.5 11.5L7 16L11.5 11.5' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 18'%3E%3Cpath d='M7 1.5V16M2.5 11.5L7 16L11.5 11.5' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
-.industry-list span i.css-icon-arrow {
+.exp a .css-arrow,
+.card-link .css-arrow,
+.contact-section button .css-arrow,
+.about-cta a .css-arrow,
+.service-cta a .css-arrow,
+.footer .text-arrow {
+  background-color: currentColor !important;
+}
+.css-icon-arrow {
   position: relative;
   background: transparent !important;
   -webkit-mask-image: none;
   mask-image: none;
 }
-.industry-list span i.css-icon-arrow::before {
+.css-icon-arrow::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -427,12 +453,22 @@ a, button { -webkit-tap-highlight-color: transparent; }
     background-position: center center;
     background-size: cover;
   }
-  .home-image-hero .exp { bottom: 9vh; }
+  .home-image-hero .exp { bottom: 13vh; }
   .home-image-hero .exp h1 { font-size: clamp(36px, 10.5vw, 49px) !important; line-height: 1; }
 
   .statement-reveal .frame.statement {
-    padding: 154px 24px 64px;
+    height: 100svh;
+    min-height: 0;
+    padding: 132px 24px 32px;
     align-items: flex-start;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .statement-reveal .statement-grid {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: auto minmax(180px, 1fr);
+    gap: 24px;
   }
   .statement h2,
   .service-intro h2,
@@ -445,7 +481,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   }
   .statement h2 { margin-top: 0 !important; }
   .statement-copy > p { margin-top: 28px; font-size: 14px; line-height: 1.65; }
-  .advisory-slideshow { min-height: 320px; margin-top: 34px; }
+  .advisory-slideshow { min-height: 0; height: 100%; margin-top: 0; }
 
   .service-intro {
     padding: 150px 24px 92px !important;
@@ -496,4 +532,12 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .footer .text-arrow { color: #fff !important; }
   .about-cta a span { color: var(--vellcrest) !important; }
   .delivery-grid article > p { min-height: 0; }
+
+  .image-scroll-cue {
+    left: auto !important;
+    right: 24px;
+    bottom: 24px !important;
+    transform: none !important;
+  }
+  .image-scroll-cue > span { display: none; }
 }

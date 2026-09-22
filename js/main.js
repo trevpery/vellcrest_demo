@@ -149,24 +149,14 @@ window.addEventListener("pageshow", () => {
 });
 
 const statementSection = document.querySelector(".statement");
-const servicesSection = document.querySelector("#services");
 const imageScrollCue = document.querySelector(".image-scroll-cue");
 let nextSectionTransitioning = false;
-let touchStartY = null;
-
-function imageIsSettled() {
-  if (!revealSection) return false;
-  const rect = revealSection.getBoundingClientRect();
-  return Math.abs(rect.top) < Math.max(20, window.innerHeight * .04);
-}
 
 function openNextSection(event) {
-  const isHomeCue = event?.currentTarget === imageScrollCue;
-  if (!statementSection || nextSectionTransitioning || (!isHomeCue && !imageIsSettled())) return false;
+  if (!statementSection || nextSectionTransitioning) return false;
   if (event?.cancelable) event.preventDefault();
   nextSectionTransitioning = true;
-  const destination = isHomeCue ? statementSection : (servicesSection || statementSection);
-  destination.scrollIntoView({
+  statementSection.scrollIntoView({
     behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
     block: "start",
   });
@@ -175,21 +165,6 @@ function openNextSection(event) {
 }
 
 imageScrollCue?.addEventListener("click", openNextSection);
-window.addEventListener("wheel", (event) => {
-  if (event.deltaY > 4) openNextSection(event);
-}, { passive: false });
-window.addEventListener("touchstart", (event) => {
-  touchStartY = event.touches[0]?.clientY ?? null;
-}, { passive: true });
-window.addEventListener("touchmove", (event) => {
-  if (touchStartY === null) return;
-  const currentY = event.touches[0]?.clientY ?? touchStartY;
-  if (touchStartY - currentY > 24 && openNextSection(event)) touchStartY = null;
-}, { passive: false });
-window.addEventListener("touchend", () => { touchStartY = null; }, { passive: true });
-window.addEventListener("keydown", (event) => {
-  if (["ArrowDown", "PageDown", " "].includes(event.key)) openNextSection(event);
-});
 function updateScrollScenes() {
   if (revealSection && revealFrame) {
     const rect = revealSection.getBoundingClientRect();
