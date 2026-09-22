@@ -1,0 +1,434 @@
+/* Vellcrest CFO Advisors — final blue-family brand layer, 13 Sep 2026 */
+:root {
+  --vellcrest: #20287a;
+  --ink: #111747;
+  --blue: #20287a;
+  --deep: #0c123e;
+  --hero-navy: #151d5c;
+  --blue-grey: #626da8;
+  --mid-blue: #354196;
+  --soft-blue: #929bd1;
+  --pale-blue: #e9ecf8;
+  --paper: #f5f6fc;
+  --line: #cfd4eb;
+  --sky: #aeb6e1;
+  --header-logo-width: 190px;
+  --header-logo-height: 94px;
+  --footer-logo-width: 110px;
+}
+
+::selection { background: var(--vellcrest); color: #fff; }
+html.initial-anchor { scroll-behavior: auto !important; }
+body { background: var(--paper); color: var(--ink); }
+a, button { -webkit-tap-highlight-color: transparent; }
+
+.header:not(.is-dark) .brand img,
+.about-header:not(.is-dark) .brand img,
+.header.is-dark .brand img,
+.footer-brand img { filter: none !important; }
+.header .brand,
+.about-page .header .brand { width: var(--header-logo-width); height: var(--header-logo-height); }
+.header .brand img,
+.about-page .header .brand img {
+  width: var(--header-logo-width);
+  height: var(--header-logo-height);
+  object-fit: contain;
+  mix-blend-mode: normal;
+}
+.footer .footer-brand img,
+.about-page .footer .footer-brand img { width: var(--footer-logo-width); height: auto; }
+
+.hero { background: #fff; }
+.home-image-hero .hero-inner {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 0;
+  display: block;
+  background: #20287A url("../assets/images/corporate-boardroom-v2.png") center/cover no-repeat;
+  color: #fff;
+  overflow: hidden;
+}
+.home-image-hero .shade {
+  display: block;
+  background: linear-gradient(90deg, rgba(12,18,62,.82), rgba(12,18,62,.38) 58%, rgba(12,18,62,.10));
+}
+.home-image-hero .exp { z-index: 2; }
+.home-image-hero .exp > p { color: #dce0f3; }
+.home-image-hero .exp h1 {
+  margin: 24px 0 34px;
+  color: #fff !important;
+  font-size: clamp(45px, 5.4vw, 94px);
+  line-height: .97;
+  letter-spacing: -.055em;
+  font-weight: 300;
+}
+.home-image-hero .exp a { color: #fff; }
+.home-image-hero .image-scroll-cue {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.testimonials[hidden] { display: none !important; }
+.hero .eyebrow,
+.hero h1,
+.hero h1 span,
+.hero .hero-copy,
+.hero .hero-copy p,
+.hero .hero-copy .hero-word,
+.hero .discover,
+.hero .discover i { color: var(--ink) !important; }
+.hero .discover i { border-color: var(--ink) !important; }
+.overlay { background: var(--deep); }
+.overlay nav a:hover { color: var(--sky); }
+.frame { background-color: var(--hero-navy); background-blend-mode: normal; }
+.shade { background: transparent !important; }
+.statement { background: var(--deep); color: #fff; }
+.statement-reveal .frame.statement {
+  min-height: 100vh;
+  padding: clamp(92px, 13vh, 148px) 9vw;
+  display: flex;
+  align-items: center;
+  background: var(--deep) !important;
+}
+.statement-reveal .statement-grid { width: 100%; }
+.statement-kicker {
+  margin: 0 0 24px;
+  color: var(--soft-blue) !important;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.statement-grid > p,
+.statement-copy > p { color: #bec5e3; }
+
+.services { background: var(--paper); color: var(--ink); }
+.service-intro { background: var(--paper); }
+.service-intro h2 { color: var(--ink); }
+.service-intro > p { color: #58628f; }
+.muted-title { color: var(--blue-grey); }
+.statement .kicker,
+.services .kicker,
+.contact-details small { color: var(--soft-blue); }
+
+.services > .why { background: var(--pale-blue); color: var(--ink); }
+.services > .why .why-intro h2 { color: var(--ink); }
+.services > .why .why-dash { color: var(--soft-blue); }
+.services > .why .why-subtitle { color: var(--blue-grey); }
+.services > .why .reason-grid { background: var(--line); border-color: var(--line); }
+.services > .why .reason-grid article { background: #fff; }
+.services > .why .reason-grid h3 { color: var(--ink); }
+.services > .why .reason-grid p { color: #59638f; }
+.services > .why .reason-icon { color: var(--vellcrest); border-color: var(--vellcrest); }
+
+.services-bridge { background: var(--paper); border-color: var(--line); }
+.services-bridge p { color: var(--vellcrest); }
+.services-bridge h2 { color: var(--ink); }
+.expertise-groups,
+.expertise-group { background: transparent; }
+.expertise-card { background: #dde2f4; color: var(--ink); }
+.expertise-card p { color: #56608e; }
+.expertise-card .card-label { color: var(--blue-grey); }
+.expertise-card.featured { background: var(--hero-navy); color: #fff; }
+.expertise-card.featured p { color: #d8dcf1; }
+.expertise-card.featured .card-label { color: var(--sky); }
+.expertise-card:hover,
+.expertise-card:focus-within { background: var(--mid-blue); color: #fff; }
+.expertise-card:hover p,
+.expertise-card:focus-within p { color: #eef0fa; }
+.expertise-card.featured:hover,
+.expertise-card.featured:focus-within { background: var(--vellcrest); }
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 28px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid currentColor;
+  color: inherit;
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.card-link span { font-size: 14px; }
+.service-card-link { cursor: pointer; }
+.service-card-link:focus-visible { outline: 3px solid var(--soft-blue); outline-offset: 4px; }
+.expertise-group.compact .service-list-card {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+.service-points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+.service-points li {
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(32,40,122,.18);
+  color: #56608e;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.service-points li:last-child { border-bottom: 0; }
+.form-honey { position: absolute !important; left: -9999px !important; opacity: 0 !important; pointer-events: none !important; }
+.expertise-card:hover .service-points li,
+.expertise-card:focus-within .service-points li {
+  color: #eef0fa;
+  border-color: rgba(255,255,255,.24);
+}
+
+.delivery { background: var(--pale-blue); color: var(--ink); }
+.section-head > p,
+.delivery .section-head > p { color: #515c8e; }
+.delivery-grid { background: transparent; }
+.delivery-grid article,
+.delivery-grid article:nth-child(n) {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  background: #fff;
+  color: var(--hero-navy);
+  border: 0;
+  padding: clamp(28px, 3vw, 42px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+}
+.delivery-grid article::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: auto;
+  height: auto;
+  background: var(--vellcrest);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: none !important;
+}
+.delivery-grid article.is-active::before {
+  animation: vellcrest-card-fill 900ms cubic-bezier(.65,0,.2,1) both;
+}
+@keyframes vellcrest-card-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.delivery-grid article > b,
+.delivery-grid article > h3,
+.delivery-grid article > p {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  text-align: left;
+}
+.delivery-grid article > h3 { margin: 0; }
+.delivery-grid article > p { margin: 12px 0 0; }
+.delivery-grid article.is-entering > b,
+.delivery-grid article.is-entering > h3,
+.delivery-grid article.is-entering > p { animation: none !important; }
+.delivery-grid article b { color: var(--blue-grey); }
+.delivery-grid article p { color: #59638f; }
+.delivery-grid article.is-active,
+.delivery-grid article.is-active b,
+.delivery-grid article.is-active h3,
+.delivery-grid article.is-active p {
+  color: #fff;
+  transition-delay: 320ms;
+}
+.delivery-grid .delivery-highlight { display: none !important; }
+
+.industries,
+.industries-sticky,
+.industries-content {
+  background: #20287A !important;
+  background-color: #20287A !important;
+  color: #fff;
+}
+.industries-title h2 { color: #fff; }
+.industries-title > p { color: #dce0f3; }
+.industry-list span { color: #fff; border-color: rgba(255,255,255,.34) !important; }
+.industry-list span i { color: #fff; border-color: rgba(255,255,255,.44); }
+.industry-curtain {
+  background-image: linear-gradient(90deg, rgba(21,29,92,.16), rgba(32,40,122,.06)), url("../assets/images/rafaga-advisory-meeting-india.png");
+  box-shadow: -28px 0 70px rgba(12,18,62,.30);
+}
+
+.testimonials { background: #fff; color: var(--ink); }
+.testimonials > h2,
+.quote-wrap blockquote { color: var(--ink); }
+.quote-wrap footer { color: var(--blue-grey); }
+.logo-marquee { border-top-color: var(--line); border-bottom-color: var(--line); }
+.logo-track span { color: var(--blue-grey); border-color: var(--line); }
+
+.contact-section { background: var(--deep); color: #fff; }
+.contact-section button { background: var(--vellcrest); }
+.contact-section input:focus { border-color: var(--sky); }
+.footer { background: #070b2b; }
+.footer > p { color: #adb5dc; }
+.footer small { color: #858fbd; }
+
+.about-page,
+.people-section { background: #fff; color: var(--ink); }
+.about-intro,
+.about-cta { background: var(--pale-blue); }
+.about-kicker,
+.values-grid span,
+.profile-role,
+.profile-portrait small { color: var(--blue-grey); }
+.about-hero-copy > p:last-child,
+.values-grid p,
+.people-heading > p:last-child,
+.profile-copy > p:last-child { color: #58628f; }
+.profile-portrait { background: var(--pale-blue); }
+.values-grid,
+.values-grid article,
+.values-grid article:not(:first-child) { border-color: var(--line); }
+.credentials { color: var(--vellcrest); }
+.profile-copy .profile-bio { max-width: 700px; }
+.profile-copy .profile-bio p { margin: 0 0 22px; color: #56608e; font-size: 16px; line-height: 1.75; }
+.profile-copy .profile-bio p:last-child { margin-bottom: 0; }
+.leadership-section .people-heading { padding-top: 30px; }
+.advisory-section { background: var(--deep); color: #fff; }
+.advisory-section .about-kicker,
+.advisory-section .profile-role,
+.advisory-grid .credentials { color: var(--sky); }
+.advisory-section .people-heading > p:last-child,
+.advisory-grid article > p:last-child { color: #c8cee8; }
+.advisory-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4vw; }
+.advisory-grid h3 { font-size: clamp(30px, 2.8vw, 48px); }
+.about-cta a { border-color: var(--ink); }
+.about-hero-image {
+  background-image: linear-gradient(180deg, transparent 48%, rgba(12,18,62,.62)), url("../assets/images/rafaga-boardroom-india.png");
+}
+
+@media (max-width: 800px) {
+  :root {
+    --header-logo-width: 150px;
+    --header-logo-height: 78px;
+    --footer-logo-width: 100px;
+  }
+  .industry-curtain {
+    background-image: linear-gradient(180deg, rgba(21,29,92,.08), rgba(12,18,62,.30)), url("../assets/images/rafaga-industries-mobile-group.png");
+  }
+  .home-image-hero .hero-inner {
+    background-position: 48% center;
+  }
+  .home-image-hero .exp {
+    left: 24px;
+    right: 24px;
+    bottom: 12vh;
+  }
+  .home-image-hero .exp h1 { font-size: clamp(43px, 12vw, 62px); }
+  .statement-reveal .frame.statement {
+    height: 100svh;
+    min-height: 720px;
+    padding: 100px 24px 70px;
+    overflow-y: auto;
+  }
+  .expertise-group.compact .service-list-card {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .about-hero-image {
+    background-image: linear-gradient(180deg, transparent 48%, rgba(12,18,62,.62)), url("../assets/images/rafaga-boardroom-mobile.png");
+  }
+  .advisory-grid { grid-template-columns: 1fr; }
+}
+
+/* Mobile refinement pass — 22 Sep 2026 */
+.exp a span,
+.card-link span,
+.contact-section button span,
+.about-cta a span,
+.service-cta a span,
+.text-arrow,
+.industry-list span i {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-style: normal;
+  font-variant-emoji: text;
+}
+
+@media (max-width: 800px) {
+  .overlay nav a { font-size: clamp(35px, 10.5vw, 43px) !important; line-height: 1.02; }
+
+  .home-image-hero .hero-inner {
+    background-image: url("../assets/images/rafaga-boardroom-mobile.png");
+    background-position: center center;
+    background-size: cover;
+  }
+  .home-image-hero .exp { bottom: 9vh; }
+  .home-image-hero .exp h1 { font-size: clamp(36px, 10.5vw, 49px) !important; line-height: 1; }
+
+  .statement-reveal .frame.statement {
+    padding: 154px 24px 64px;
+    align-items: flex-start;
+  }
+  .statement h2,
+  .service-intro h2,
+  .services-bridge h2,
+  .section-head h2,
+  .industries-title h2,
+  .contact-copy h2 {
+    font-size: clamp(34px, 10vw, 46px) !important;
+    line-height: 1 !important;
+  }
+  .statement h2 { margin-top: 0 !important; }
+  .statement-copy > p { margin-top: 28px; font-size: 14px; line-height: 1.65; }
+  .advisory-slideshow { min-height: 320px; margin-top: 34px; }
+
+  .service-intro {
+    padding: 150px 24px 92px !important;
+    scroll-margin-top: 0;
+  }
+  .service-intro > p { margin-top: 24px; font-size: 14px; line-height: 1.65; }
+  .services > .why .why-intro h2 { font-size: clamp(32px, 9.5vw, 43px) !important; }
+  .services-bridge { padding-top: 95px; padding-bottom: 70px; }
+  .expertise-card.featured { min-height: 340px; }
+  .expertise-card h3 { font-size: 34px; }
+
+  .delivery-grid article::before {
+    transform: scaleY(0);
+    transform-origin: center top;
+  }
+  .delivery-grid article.is-active::before { animation-name: vellcrest-card-fill-mobile; }
+  @keyframes vellcrest-card-fill-mobile {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+
+  .industries-content {
+    padding: 150px 24px 58px !important;
+    justify-content: flex-start;
+    overflow-y: auto;
+  }
+  .industries-title { gap: 22px; }
+  .industries-title > p { font-size: 13px; line-height: 1.55; }
+  .industry-list {
+    margin-top: 25px;
+    gap: 18px 18px;
+    padding-bottom: 24px;
+  }
+  .industry-list span,
+  .industry-list span:nth-child(even) {
+    gap: 10px;
+    font-size: clamp(15px, 4.6vw, 19px);
+    line-height: 1.16;
+  }
+  .industry-list span i {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 13px;
+  }
+
+  .contact-section button span,
+  .footer .text-arrow { color: #fff !important; }
+  .about-cta a span { color: var(--vellcrest) !important; }
+}

@@ -1,0 +1,201 @@
+.services {
+  background: #f7f8f9;
+  color: var(--ink);
+  padding-bottom: 18vh;
+}
+.service-intro > p {
+  color: #785d66;
+}
+.services .kicker {
+  color: #784154;
+}
+.expertise-groups {
+  width: min(1440px, 84vw);
+  margin: 0 auto;
+  display: grid;
+  gap: 14vh;
+}
+.expertise-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: minmax(390px, 1.65fr) minmax(245px, 1fr);
+  gap: 20px;
+}
+.expertise-card {
+  background: #f4e9ec;
+  color: var(--ink);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    transform 0.35s ease;
+}
+.expertise-card.featured {
+  grid-column: span 2;
+  background: var(--deep);
+  color: #fff;
+  padding: 44px;
+}
+.expertise-card:hover,
+.expertise-card:focus-within {
+  background: #68192d;
+  color: #fff;
+  transform: translateY(-3px);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+.card-top i {
+  width: 44px;
+  height: 44px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: Georgia, serif;
+  font-style: normal;
+  font-size: 16px;
+  opacity: 0.65;
+}
+.featured .card-top i {
+  width: 108px;
+  height: 108px;
+  font-size: 24px;
+}
+.expertise-card h3 {
+  margin: 20px 0 28px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(34px, 3.2vw, 58px);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+}
+.expertise-card h4 {
+  margin: 0 0 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(21px, 1.7vw, 29px);
+  font-weight: 400;
+  line-height: 1.15;
+}
+.expertise-card p {
+  margin: 0;
+  max-width: 620px;
+  color: #785d66;
+  font-size: 14px;
+  line-height: 1.65;
+  transition: color 0.35s ease;
+}
+.expertise-card.featured p,
+.expertise-card:hover p,
+.expertise-card:focus-within p {
+  color: #dfcbd1;
+}
+.expertise-card .card-label {
+  margin-bottom: 10px;
+  color: #a07c87;
+  text-transform: uppercase;
+  letter-spacing: 0.17em;
+  font-size: 10px;
+}
+.expertise-card:hover .card-label {
+  color: #cfa0ab;
+}
+.expertise-group.compact {
+  grid-template-rows: repeat(2, minmax(230px, 1fr));
+}
+.expertise-group.compact .featured {
+  grid-row: 1/3;
+}
+.expertise-group.compact .expertise-card:not(.featured) {
+  grid-column: 3;
+}
+@media (max-width: 800px) {
+  .services {
+    padding-bottom: 13vh;
+  }
+  .expertise-groups {
+    width: auto;
+    margin: 0 24px;
+    gap: 9vh;
+  }
+  .expertise-group,
+  .expertise-group.compact {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    gap: 12px;
+  }
+  .expertise-card,
+  .expertise-card.featured,
+  .expertise-group.compact .featured,
+  .expertise-group.compact .expertise-card:not(.featured) {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 240px;
+    padding: 26px;
+  }
+.expertise-card.featured {
+    min-height: 390px;
+  }
+  .featured .card-top i {
+    width: 72px;
+    height: 72px;
+  }
+  .expertise-card h3 {
+    font-size: 38px;
+  }
+  .expertise-card h4 {
+    font-size: 25px;
+  }
+}
+.expertise-card.featured:hover,
+.expertise-card.featured:focus-within {
+  background: var(--deep);
+}
+
+/* Maroon family colour edition */
+.expertise-groups,.expertise-group{background:#32101a}
+.expertise-group-head p{color:#cdb5bc}
+.expertise-group-head h3{color:#f7eef0}
+.expertise-card{background:#68192d;color:#f7f0e7}
+.expertise-card.featured{background:#8d3c53}
+.expertise-card:hover{background:#6f3345;color:#fff}
+.expertise-card.featured:hover{background:#955064}
+.expertise-card .card-label,.expertise-card p{color:#e2c5cc}
+.expertise-card .card-number{color:#c88e9c}
+.services{background:#f3e7ea;color:#2a0d16}
+.service-intro h2{color:#4b1021}
+.service-intro>p{color:#6f4c56}
+.services .kicker{color:#841e32}
+.expertise-groups,.expertise-group{background:transparent}
+.expertise-card.featured:focus-within{background:#955064}
+
+/* Client revision: dark title panel, light supporting panels. */
+.expertise-card {
+  background: #f0e1e5;
+  color: #4b1021;
+}
+.expertise-card.featured {
+  background: #4b1021;
+  color: #fff;
+}
+.expertise-card p { color: #6f4c56; }
+.expertise-card.featured p { color: #e5cbd2; }
+.expertise-card .card-label { color: #aa697b; }
+.expertise-card.featured .card-label { color: #c88e9c; }
+.expertise-card:hover,
+.expertise-card:focus-within {
+  background: #9e5e70;
+  color: #fff;
+}
+.expertise-card:hover p,
+.expertise-card:focus-within p { color: #f4e7ea; }
+.expertise-card.featured:hover,
+.expertise-card.featured:focus-within { background: #68192d; }
