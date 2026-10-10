@@ -3,7 +3,12 @@ const button = menuButtons[0];
 const overlay = document.querySelector(".overlay");
 const header = document.querySelector(".header");
 const brandImage = document.querySelector(".brand img");
+const sectionRequestKey = "vellcrest-section-request";
 function setMenu(open) {
+  if (open) {
+    overlay.style.removeProperty("display");
+    overlay.classList.remove("is-closing-now");
+  }
   menuButtons.forEach(menuButton => {
     menuButton.classList.toggle("active", open);
     menuButton.setAttribute("aria-expanded", String(open));
@@ -13,7 +18,20 @@ function setMenu(open) {
   document.body.style.overflow = open ? "hidden" : "";
   updateHeaderTheme();
 }
+function closeMenuImmediately() {
+  // Remove the navigation panel in the exact frame in which an item is chosen.
+  overlay.classList.add("is-closing-now");
+  overlay.style.setProperty("display", "none", "important");
+  setMenu(false);
+}
+function releaseImmediateMenuClose() {
+  overlay.style.removeProperty("display");
+  overlay.classList.remove("is-closing-now");
+}
 menuButtons.forEach(menuButton => menuButton.addEventListener("click", () => setMenu(!overlay.classList.contains("open"))));
+overlay.addEventListener("click", event => {
+  if (event.target.closest("a[href]")) closeMenuImmediately();
+}, { capture: true });
 
 function revealPage() {
   document.body.classList.remove("is-page-leaving");
@@ -25,37 +43,54 @@ window.addEventListener("pageshow", revealPage);
 overlay.querySelectorAll("a[href]").forEach(link => link.addEventListener("click", event => {
   const destination = new URL(link.href, window.location.href);
   const sameDocument = destination.origin === window.location.origin && destination.pathname === window.location.pathname && destination.search === window.location.search;
-  event.preventDefault();
-  overlay.classList.add("is-closing-now");
-  setMenu(false);
+  if (link.target === "_blank" || destination.origin !== window.location.origin) {
+    closeMenuImmediately();
+    return;
+  }
 
-  if (sameDocument && destination.hash) {
+  // Do not hold the overlay while another document loads. Close immediately
+  // and allow the link's native navigation to start without an added delay.
+  if (!sameDocument) {
+    if (destination.hash) {
+      event.preventDefault();
+      sessionStorage.setItem(sectionRequestKey, destination.hash);
+      window.location.assign(destination.pathname + destination.search);
+    }
+    closeMenuImmediately();
+    return;
+  }
+
+  if (destination.hash) {
     const target = document.querySelector(destination.hash);
     if (target) {
-      document.body.classList.add("is-section-switching");
-      window.setTimeout(() => {
-        const previousScrollBehavior = document.documentElement.style.scrollBehavior;
-        document.documentElement.style.scrollBehavior = "auto";
-        history.pushState(null, "", destination.hash);
-        window.scrollTo({ top: target.offsetTop, left: 0, behavior: "auto" });
-        document.documentElement.style.scrollBehavior = previousScrollBehavior;
-        document.body.classList.remove("is-section-switching");
-        document.body.classList.add("is-section-arriving");
-        window.setTimeout(() => document.body.classList.remove("is-section-arriving"), 300);
-      }, 135);
+      event.preventDefault();
+      closeMenuImmediately();
+      history.pushState(null, "", destination.hash);
+      const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = "auto";
+      window.scrollTo({ top: target.offsetTop, left: 0, behavior: "auto" });
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+      updateHeaderTheme();
+      window.requestAnimationFrame(releaseImmediateMenuClose);
     }
-    window.setTimeout(() => overlay.classList.remove("is-closing-now"), 80);
-    return;
+  } else {
+    closeMenuImmediately();
   }
-
-  if (!sameDocument && destination.hash) {
-    window.location.assign(destination.href);
-    return;
-  }
-
-  document.body.classList.add("is-page-leaving");
-  window.setTimeout(() => window.location.assign(destination.href), 190);
 }));
+
+// Footer and CTA links to homepage sections use the same no-scroll arrival
+// path as menu links. The browser never receives a cross-page hash to animate.
+document.querySelectorAll('a[href*="index.html#"]').forEach(link => {
+  if (overlay.contains(link)) return;
+  link.addEventListener("click", event => {
+    if (event.defaultPrevented || link.target === "_blank") return;
+    const destination = new URL(link.href, window.location.href);
+    if (destination.origin !== window.location.origin || !destination.hash) return;
+    event.preventDefault();
+    sessionStorage.setItem(sectionRequestKey, destination.hash);
+    window.location.assign(destination.pathname + destination.search);
+  });
+});
 document.addEventListener("keydown", event => { if (event.key === "Escape") setMenu(false); });
 document.querySelector("#year").textContent = new Date().getFullYear();
 
@@ -66,7 +101,7 @@ function updateHeaderTheme() {
   const onDark = menuOpen || Boolean(point && point.closest(".advisory-section, .service-hero, .service-band, .service-cta, .footer"));
   header.classList.toggle("is-dark", onDark);
   menuButtons.forEach(menuButton => { menuButton.style.color = onDark ? "#fff" : "#20287a"; });
-  const nextLogo = onDark ? "assets/images/vellcrest-logo-light.png" : "assets/images/vellcrest-logo-primary.png";
+  const nextLogo = onDark ? "assets/images/vellcrest-logo-tm-white.png?v=20261007-tm-final" : "assets/images/vellcrest-logo-tm.png?v=20261007-tm-final";
   if (!brandImage.src.endsWith(nextLogo)) brandImage.src = nextLogo;
 }
 window.addEventListener("scroll", updateHeaderTheme, { passive: true });
@@ -75,37 +110,50 @@ updateHeaderTheme();
 
 const serviceSwitcher = document.querySelector(".service-switcher");
 const serviceSwitcherToggle = serviceSwitcher?.querySelector(".service-switcher-toggle");
+const serviceSwitcherLinks = serviceSwitcher?.querySelectorAll(".service-switcher-panel a") || [];
 let serviceSwitcherTimer;
+const serviceSwitcherHiddenTime = 10000;
+const serviceSwitcherVisibleTime = 3000;
 function setServiceSwitcher(open) {
   if (!serviceSwitcher || !serviceSwitcherToggle) return;
   serviceSwitcher.classList.toggle("is-open", open);
   serviceSwitcherToggle.setAttribute("aria-expanded", String(open));
 }
-function scheduleServiceSwitcher(delay = 10000) {
+function scheduleServiceSwitcher(delay = serviceSwitcherHiddenTime) {
   if (!serviceSwitcher) return;
   window.clearTimeout(serviceSwitcherTimer);
   serviceSwitcherTimer = window.setTimeout(() => {
     setServiceSwitcher(true);
     serviceSwitcherTimer = window.setTimeout(() => {
       setServiceSwitcher(false);
-      scheduleServiceSwitcher(10000);
-    }, 3000);
+      scheduleServiceSwitcher(serviceSwitcherHiddenTime);
+    }, serviceSwitcherVisibleTime);
   }, delay);
 }
 serviceSwitcherToggle?.addEventListener("click", () => {
   setServiceSwitcher(false);
-  scheduleServiceSwitcher(10000);
+  scheduleServiceSwitcher(serviceSwitcherHiddenTime);
 });
-if (serviceSwitcher) scheduleServiceSwitcher(3000);
+if (serviceSwitcher) scheduleServiceSwitcher(serviceSwitcherHiddenTime);
+serviceSwitcherLinks.forEach(link => {
+  link.addEventListener("click", () => {
+    // Remove the card in the selection frame. Mobile browsers can resize the
+    // visual viewport as navigation begins; leaving the fixed card visible
+    // during that handoff makes it appear to jump vertically.
+    window.clearTimeout(serviceSwitcherTimer);
+    serviceSwitcher.style.setProperty("transition", "none", "important");
+    serviceSwitcher.style.setProperty("display", "none", "important");
+  }, { capture: true });
+});
 document.addEventListener("click", event => {
   if (serviceSwitcher?.classList.contains("is-open") && !serviceSwitcher.contains(event.target)) {
     setServiceSwitcher(false);
-    scheduleServiceSwitcher(10000);
+    scheduleServiceSwitcher(serviceSwitcherHiddenTime);
   }
 });
 document.addEventListener("keydown", event => {
   if (event.key === "Escape" && serviceSwitcher?.classList.contains("is-open")) {
     setServiceSwitcher(false);
-    scheduleServiceSwitcher(10000);
+    scheduleServiceSwitcher(serviceSwitcherHiddenTime);
   }
 });

@@ -879,7 +879,8 @@ h1 span {
   letter-spacing: 0.16em;
   margin: 0 0 28px;
 }
-.contact-section input {
+.contact-section input,
+.contact-section textarea {
   display: block;
   width: 100%;
   border: 0;
@@ -889,8 +890,11 @@ h1 span {
   font-size: 18px;
   padding: 12px 0;
   outline: none;
+  font-family: inherit;
+  resize: vertical;
 }
-.contact-section input:focus {
+.contact-section input:focus,
+.contact-section textarea:focus {
   border-color: #d19daa;
 }
 .contact-section button {
@@ -905,8 +909,13 @@ h1 span {
   letter-spacing: 0.15em;
   cursor: pointer;
 }
+.contact-section button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
 .form-note {
   font-size: 12px;
+  min-height: 1.5em;
 }
 .footer {
   padding: 10vh 9vw 5vh;

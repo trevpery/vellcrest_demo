@@ -3,9 +3,18 @@ const button = document.querySelector(".menu-btn"),
 const header = document.querySelector(".header");
 const brand = document.querySelector(".brand");
 const brandImage = brand.querySelector("img");
-const colourLogo = "assets/images/vellcrest-logo-primary.png";
-const whiteLogo = "assets/images/vellcrest-logo-light.png";
+const colourLogo = "assets/images/vellcrest-logo-tm.png?v=20261007-tm-final";
+const whiteLogo = "assets/images/vellcrest-logo-tm-white.png?v=20261007-tm-final";
+const sectionRequestKey = "vellcrest-section-request";
+const storedSectionRequest = sessionStorage.getItem(sectionRequestKey);
+if (storedSectionRequest) document.documentElement.classList.add("initial-anchor");
 function setMenu(open) {
+  // A forced-close class from an earlier navigation must never survive into
+  // the next open cycle, otherwise the button changes but the panel stays hidden.
+  if (open) {
+    overlay.style.removeProperty("display");
+    overlay.classList.remove("is-closing-now");
+  }
   button.classList.toggle("active", open);
   overlay.classList.toggle("open", open);
   button.setAttribute("aria-expanded", String(open));
@@ -17,12 +26,30 @@ function setMenu(open) {
   document.body.style.overflow = open ? "hidden" : "";
   updateHeaderTheme();
 }
-button.addEventListener("click", () =>
-  setMenu(!button.classList.contains("active")),
-);
+function closeMenuImmediately() {
+  // Menu selections must feel decisive: remove the panel in the same frame as
+  // the click instead of playing the normal 750ms closing animation.
+  overlay.classList.add("is-closing-now");
+  overlay.style.setProperty("display", "none", "important");
+  setMenu(false);
+}
+function releaseImmediateMenuClose() {
+  overlay.style.removeProperty("display");
+  overlay.classList.remove("is-closing-now");
+}
+button.addEventListener("click", () => setMenu(!overlay.classList.contains("open")));
+// Capture the selection before link-specific navigation code runs, ensuring
+// the overlay is already hidden when the browser processes the destination.
+overlay.addEventListener("click", (event) => {
+  if (event.target.closest("a[href]")) closeMenuImmediately();
+}, { capture: true });
 
 function revealPage() {
   document.body.classList.remove("is-page-leaving");
+  // When arriving at a section URL, keep the new page concealed until its
+  // exact scroll position has been applied. This prevents a visible rush from
+  // the hero through every section on the way to the destination.
+  if (document.documentElement.classList.contains("initial-anchor")) return;
   requestAnimationFrame(() => document.body.classList.add("is-page-ready"));
 }
 revealPage();
@@ -36,44 +63,46 @@ overlay.querySelectorAll("a[href]").forEach((link) => {
       destination.pathname === window.location.pathname &&
       destination.search === window.location.search;
 
-    event.preventDefault();
-    overlay.classList.add("is-closing-now");
-    setMenu(false);
-
-    if (sameDocument && destination.hash === "#home") {
-      document.body.classList.add("is-section-switching");
-      window.setTimeout(() => {
-        history.replaceState(null, "", window.location.pathname + window.location.search);
-        restartHomeSequence();
-        document.body.classList.remove("is-section-switching");
-        document.body.classList.add("is-section-arriving");
-        window.setTimeout(() => document.body.classList.remove("is-section-arriving"), 300);
-      }, 135);
-      window.setTimeout(() => overlay.classList.remove("is-closing-now"), 80);
+    if (link.target === "_blank" || destination.origin !== window.location.origin) {
+      closeMenuImmediately();
       return;
     }
 
-    if (sameDocument && destination.hash) {
-      const target = document.querySelector(destination.hash);
-      if (target) {
-        document.body.classList.add("is-section-switching");
-        window.setTimeout(() => {
-          const previousScrollBehavior = document.documentElement.style.scrollBehavior;
-          document.documentElement.style.scrollBehavior = "auto";
-          history.pushState(null, "", destination.hash);
-          window.scrollTo({ top: target.offsetTop, left: 0, behavior: "auto" });
-          document.documentElement.style.scrollBehavior = previousScrollBehavior;
-          document.body.classList.remove("is-section-switching");
-          document.body.classList.add("is-section-arriving");
-          window.setTimeout(() => document.body.classList.remove("is-section-arriving"), 300);
-        }, 135);
+    // Let normal browser navigation begin immediately. The menu is removed in
+    // this click frame, so it never lingers over the requested page.
+    if (!sameDocument) {
+      if (destination.hash) {
+        event.preventDefault();
+        sessionStorage.setItem(sectionRequestKey, destination.hash);
+        window.location.assign(destination.pathname + destination.search);
       }
-      window.setTimeout(() => overlay.classList.remove("is-closing-now"), 80);
+      closeMenuImmediately();
       return;
     }
 
-    document.body.classList.add("is-page-leaving");
-    window.setTimeout(() => window.location.assign(destination.href), 190);
+    event.preventDefault();
+    closeMenuImmediately();
+
+    if (!destination.hash) return;
+    const target = destination.hash === "#home"
+      ? document.querySelector("#home")
+      : document.querySelector(destination.hash);
+    if (!target) return;
+
+    if (destination.hash === "#industries") resetIndustriesScene();
+    const nextHash = destination.hash === "#home" ? "#home" : destination.hash;
+    history.pushState(null, "", nextHash);
+    const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = "auto";
+    window.scrollTo({
+      top: destination.hash === "#home" ? 0 : target.offsetTop,
+      left: 0,
+      behavior: "auto",
+    });
+    document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    updateScrollScenes();
+    updateHeaderTheme();
+    window.requestAnimationFrame(releaseImmediateMenuClose);
   });
 });
 document.addEventListener("keydown", (e) => {
@@ -124,20 +153,25 @@ if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 // script has begun executing. Arm the sequence from `pageshow`, after that
 // restoration point, so every normal refresh reliably starts from the hero.
 window.addEventListener("pageshow", () => {
-  if (window.location.hash && window.location.hash !== "#home") {
-    const target = document.querySelector(window.location.hash);
+  const requestedHash = sessionStorage.getItem(sectionRequestKey) || window.location.hash;
+  sessionStorage.removeItem(sectionRequestKey);
+  if (requestedHash && requestedHash !== "#home") {
+    const target = document.querySelector(requestedHash);
     if (target) {
+      if (requestedHash === "#industries") resetIndustriesScene();
       document.documentElement.style.scrollBehavior = "auto";
       window.scrollTo({ top: target.offsetTop, left: 0, behavior: "auto" });
       window.requestAnimationFrame(() => {
         window.scrollTo({ top: target.offsetTop, left: 0, behavior: "auto" });
+        history.replaceState(null, "", requestedHash);
         document.documentElement.classList.remove("initial-anchor");
         document.documentElement.style.scrollBehavior = "";
+        window.requestAnimationFrame(() => document.body.classList.add("is-page-ready"));
       });
     }
     return;
   }
-  if (window.location.hash === "#home") {
+  if (requestedHash === "#home" || window.location.hash === "#home") {
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
   document.documentElement.style.scrollBehavior = "auto";
@@ -145,6 +179,28 @@ window.addEventListener("pageshow", () => {
   window.requestAnimationFrame(() => {
     document.documentElement.classList.remove("initial-anchor");
     document.documentElement.style.scrollBehavior = "";
+    window.requestAnimationFrame(() => document.body.classList.add("is-page-ready"));
+  });
+});
+
+// Footer, logo and CTA links on the home page must jump directly to their
+// section rather than visibly smooth-scrolling through all intervening panels.
+document.querySelectorAll('a[href^="#"]:not(.image-scroll-cue)').forEach((link) => {
+  if (overlay.contains(link)) return;
+  link.addEventListener("click", (event) => {
+    const hash = link.getAttribute("href");
+    if (!hash || hash === "#") return;
+    const target = document.querySelector(hash);
+    if (!target) return;
+    event.preventDefault();
+    if (hash === "#industries") resetIndustriesScene();
+    const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = "auto";
+    history.pushState(null, "", hash);
+    window.scrollTo({ top: hash === "#home" ? 0 : target.offsetTop, left: 0, behavior: "auto" });
+    document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    updateScrollScenes();
+    updateHeaderTheme();
   });
 });
 
@@ -184,14 +240,23 @@ function updateScrollScenes() {
     // The scene pins before the curtain moves. The image then gets one complete
     // viewport of scroll to leave, after which the revealed content holds long
     // enough to be read before the section releases.
-    const startAt = window.innerHeight * .08;
-    const travel = window.innerHeight * .92;
+    // At the section anchor the curtain must be completely flush left. Motion
+    // begins only after the user scrolls further into the pinned scene.
+    const startAt = 0;
+    const travel = window.innerHeight * (window.innerWidth <= 800 ? .80 : .92);
     const progress = clamp01((startAt - rect.top) / travel);
     const eased = progress * progress * (3 - 2 * progress);
     industriesSection.style.setProperty("--industry-progress", String(progress));
     industriesSection.style.setProperty("--industry-x", `${eased * 105}%`);
     industriesSection.style.setProperty("--industry-y", `${(1 - eased) * 18}px`);
   }
+}
+
+function resetIndustriesScene() {
+  if (!industriesSection) return;
+  industriesSection.style.setProperty("--industry-progress", "0");
+  industriesSection.style.setProperty("--industry-x", "0%");
+  industriesSection.style.setProperty("--industry-y", "18px");
 }
 window.addEventListener("scroll", updateScrollScenes, { passive: true });
 window.addEventListener("resize", updateScrollScenes);
@@ -264,7 +329,63 @@ if (slides.length > 1) {
     slides[slideIndex].classList.add("active");
   }, 4200);
 }
-document.querySelector("form")?.addEventListener("submit", (event) => {
-  const note = event.currentTarget.querySelector(".form-note");
-  if (note) note.textContent = "Sending your enquiry";
-});
+const contactForm = document.querySelector("#contact-form");
+if (contactForm) {
+  const startedField = contactForm.querySelector('[name="form_started"]');
+  const successCard = document.querySelector("#contact-success");
+  const successClose = successCard?.querySelector(".contact-success__close");
+  if (startedField) startedField.value = String(Date.now());
+
+  successClose?.addEventListener("click", () => {
+    successCard.hidden = true;
+    contactForm.hidden = false;
+    if (startedField) startedField.value = String(Date.now());
+    contactForm.querySelector('[name="name"]')?.focus();
+  });
+
+  contactForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const note = form.querySelector(".form-note");
+    const button = form.querySelector('button[type="submit"]');
+    const submittedName = String(new FormData(form).get("name") || "").trim();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      if (note) note.textContent = "Please complete all required fields";
+      return;
+    }
+
+    if (button) button.disabled = true;
+    if (note) note.textContent = "Sending your enquiry";
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Your enquiry could not be sent");
+      }
+
+      form.reset();
+      if (startedField) startedField.value = String(Date.now());
+      if (successCard) {
+        const nameTarget = successCard.querySelector("[data-contact-name]");
+        if (nameTarget) nameTarget.textContent = submittedName;
+        form.hidden = true;
+        successCard.hidden = false;
+        successCard.setAttribute("tabindex", "-1");
+        successCard.focus({ preventScroll: true });
+      } else if (note) {
+        note.textContent = `Dear ${submittedName}, your message has been received. We will get back to you shortly`;
+      }
+    } catch (error) {
+      if (note) note.textContent = error.message || "Your enquiry could not be sent. Please try again";
+    } finally {
+      if (button) button.disabled = false;
+    }
+  });
+}

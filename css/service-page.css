@@ -380,14 +380,14 @@
   visibility: hidden;
   pointer-events: none;
   transform: translate(24px, -50%) !important;
-  transition: transform 350ms cubic-bezier(.22,.61,.36,1), opacity 250ms ease, visibility 0s linear 350ms;
+  transition: transform 520ms cubic-bezier(.22,.61,.36,1), opacity 360ms ease, visibility 0s linear 520ms;
 }
 .service-page .service-switcher.is-open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transform: translate(0, -50%) !important;
-  transition: transform 350ms cubic-bezier(.22,.61,.36,1), opacity 250ms ease, visibility 0s;
+  transition: transform 520ms cubic-bezier(.22,.61,.36,1), opacity 360ms ease, visibility 0s;
 }
 .service-page .service-switcher-panel {
   width: 100% !important;
@@ -419,4 +419,15 @@
 @media (max-width: 420px) {
   .service-page .service-switcher-panel { padding: 27px 36px 27px 20px !important; }
   .service-page .service-switcher-panel a { font-size: 16px !important; }
+}
+
+@media (max-width: 800px) {
+  /* svh does not change when the mobile address bar expands or collapses, so
+     the card stays locked to one vertical position while the page scrolls. */
+  .service-page .service-switcher {
+    position: fixed !important;
+    top: 50svh !important;
+    right: 0 !important;
+    bottom: auto !important;
+  }
 }
