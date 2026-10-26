@@ -270,7 +270,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .industry-list span { color: #fff; border-color: rgba(255,255,255,.34) !important; }
 .industry-list span i { color: #fff; border-color: rgba(255,255,255,.44); }
 .industry-curtain {
-  background-image: linear-gradient(90deg, rgba(21,29,92,.16), rgba(32,40,122,.06)), url("../assets/images/rafaga-advisory-meeting-india.png");
+  background-image: linear-gradient(90deg, rgba(21,29,92,.16), rgba(32,40,122,.06)), url("../assets/images/businesses-we-serve-desktop-wide-final.webp");
   box-shadow: -28px 0 70px rgba(12,18,62,.30);
 }
 
@@ -405,6 +405,24 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .advisory-grid article > p:last-child { color: #c8cee8; }
 .advisory-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4vw; }
 .advisory-grid h3 { font-size: clamp(30px, 2.8vw, 48px); }
+.advisory-portrait {
+  width: min(92%, 460px);
+  aspect-ratio: 3 / 4;
+  margin: 0 0 32px;
+  overflow: hidden;
+  background: #dce3f4;
+}
+.advisory-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.advisory-grid article:nth-child(3) .advisory-portrait img {
+  transform: scale(1.1);
+  transform-origin: 50% 32%;
+}
 .about-cta a { border-color: var(--ink); }
 .about-hero-image {
   background-image: linear-gradient(180deg, transparent 48%, rgba(12,18,62,.62)), url("../assets/images/rafaga-boardroom-india.png");
@@ -417,7 +435,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
     --footer-logo-width: 100px;
   }
   .industry-curtain {
-    background-image: linear-gradient(180deg, rgba(21,29,92,.08), rgba(12,18,62,.30)), url("../assets/images/rafaga-industries-mobile-group.png");
+    background-image: linear-gradient(180deg, rgba(21,29,92,.08), rgba(12,18,62,.30)), url("../assets/images/businesses-we-serve-high-res-v2.webp");
   }
   .home-image-hero .hero-inner {
     background-position: 48% center;
@@ -682,4 +700,41 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .about-page .advisory-grid {
     grid-template-columns: 1fr !important;
   }
+  .about-page .advisory-portrait {
+    width: min(92%, 380px);
+    margin-bottom: 28px;
+  }
 }
+
+/* Businesses We Serve — final approved images */
+
+.industry-curtain {
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(21, 29, 92, 0.16),
+      rgba(32, 40, 122, 0.06)
+    ),
+    url("../assets/images/businesses-we-serve-desktop-wide-final.webp") !important;
+
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 800px) {
+  .industry-curtain {
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(1, 17, 66, 0.08),
+        rgba(1, 17, 66, 0.34)
+      ),
+      url("../assets/images/businesses-we-serve-high-res-v2.webp") !important;
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+}
+

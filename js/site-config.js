@@ -1,5 +1,5 @@
 /* Replace the placeholder below once Kishore's final LinkedIn URL is available. */
-const VELLCREST_LINKEDIN_URL = "https://www.linkedin.com/in/kishore-iyer";
+const VELLCREST_LINKEDIN_URL = "https://www.linkedin.com/in/kishore-iyer-6443a014/";
 
 document.querySelectorAll("[data-linkedin], .linkedin-link").forEach((link) => {
   if (VELLCREST_LINKEDIN_URL) {
